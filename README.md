@@ -1,59 +1,48 @@
-# Ollama Chatbot
+# Ollama Chatbot (Phi-3.5)
 
-This project is a personal chatbot built using the Ollama model. It serves as a demonstration of how to integrate the Ollama model into a Node.js application, allowing users to interact with the chatbot through a simple interface.
+이 프로젝트는 로컬 LLM 실행 도구인 **Ollama**와 **Node.js**를 사용하여 만든 개인용 챗봇 애플리케이션입니다. 브라우저 기반의 간단한 채팅 인터페이스를 제공하며, 로컬에서 실행되는 `phi3.5` 모델과 대화할 수 있습니다.
 
-## Project Structure
+## 📂 프로젝트 구조
 
-```
 ollama-chatbot
+├── public
+│ └── index.html # 채팅 웹 인터페이스
 ├── src
-│   ├── index.js          # Entry point of the application
-│   ├── config
-│   │   └── ollamaConfig.js # Configuration settings for the Ollama model
-│   ├── services
-│   │   └── chatService.js  # Service for handling chat logic
-│   └── utils
-│       └── logger.js       # Utility for logging messages
-├── .vscode
-│   ├── launch.json         # Debugging configuration
-│   └── settings.json       # Workspace-specific settings
-├── .env                     # Environment variables
-├── package.json             # npm configuration file
-└── README.md                # Project documentation
+│ ├── index.js # 앱 진입점 (Express 서버)
+│ ├── config
+│ │ └── ollamaConfig.js # Ollama 연결 설정
+│ ├── services
+│ │ └── chatService.js # Ollama API 통신 로직
+│ └── utils
+│ └── logger.js # 로깅 유틸리티
+├── .env # 환경 변수 (선택 사항)
+├── package.json # 의존성 관리
+└── README.md # 문서
 ```
 
-## Setup Instructions
+## 사전 준비 (Prerequisites)
 
-1. **Clone the Repository**
-   ```bash
-   git clone <repository-url>
-   cd ollama-chatbot
-   ```
+이 프로젝트를 실행하기 전에 **Ollama**가 설치되어 있고 실행 중이어야 합니다.
 
-2. **Install Dependencies**
-   Make sure you have Node.js installed. Then run:
-   ```bash
-   npm install
-   ```
+### 1. Ollama 설치
+*   **macOS / Linux / Windows**: [Ollama 공식 홈페이지](https://ollama.com/download)에서 다운로드하여 설치합니다.
 
-3. **Configure Environment Variables**
-   Create a `.env` file in the root directory and add your configuration settings, such as API keys.
+구동:
+### (Window) ollama serve
+### (Mac) ollama 애플리케이션 실행
 
-4. **Run the Application**
-   Start the server using:
-   ```bash
-   node src/index.js
-   ```
+### 2. 모델 다운로드 (Phi-3.5)
+터미널을 열고 다음 명령어를 입력하여 사용할 모델을 다운로드합니다.
+```bash
+ollama pull phi3.5
 
-5. **Access the Chatbot**
-   Open your browser and navigate to `http://localhost:3000` (or the port specified in your configuration) to interact with the chatbot.
+### 3. 의존성 설치
+npm install
 
-## Usage Guidelines
+---
 
-- Use the chat interface to send messages to the chatbot.
-- The chatbot will respond based on the Ollama model's capabilities.
-- Check the logs for any debugging information or errors.
+# 서버 실행 커맨드
+node src/index.js
 
-## Contributing
-
-Feel free to submit issues or pull requests if you have suggestions for improvements or new features.
+# 로컬 웹
+http://localhost:3000
