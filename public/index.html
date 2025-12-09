@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama Chatbot</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f4f9; }
+        #chat-container { height: 500px; border: 1px solid #ddd; overflow-y: scroll; padding: 20px; background: white; border-radius: 8px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 10px 15px; border-radius: 20px; max-width: 70%; line-height: 1.4; }
+        .user-message { align-self: flex-end; background-color: #007bff; color: white; }
+        .bot-message { align-self: flex-start; background-color: #e9ecef; color: black; }
+        .input-area { display: flex; gap: 10px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:disabled { background-color: #ccc; }
+    </style>
+</head>
+<body>
+    <h1>🤖 Ollama Chatbot (Phi-3.5)</h1>
+    <div id="chat-container"></div>
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="메시지를 입력하세요..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <button onclick="sendMessage()" id="send-btn">전송</button>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function appendMessage(text, isUser) {
+            const div = document.createElement('div');
+            div.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            div.textContent = text;
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // UI 업데이트
+            appendMessage(text, true);
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+
+                const data = await response.json();
+                
+                if (data.response) {
+                    appendMessage(data.response, false);
+                } else {
+                    appendMessage('오류가 발생했습니다.', false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                appendMessage('서버 통신 중 오류가 발생했습니다.', false);
+            } finally {
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                userInput.focus();
+            }
+        }
+    </script>
+</body>
+</html>
